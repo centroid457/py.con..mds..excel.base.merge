@@ -56,7 +56,9 @@ ws_price_new = wb_price_new.active
 # ================================================================
 # 3=DATA LOAD
 # ----------------------------------------------------------------
-# 0=MainBASE=DETECT COLUMNS IN HEADER
+# 1=MainBASE
+# --------------------------
+# 1=DETECT COLUMNS IN HEADER
 row_title = ws[1]
 column_index_from_1 = 1
 for cell in row_title:
@@ -69,9 +71,11 @@ for cell in row_title:
         print(f"Колонка Артикул = {column_index_art}")
     column_index_from_1 += 1
 
-# ----------------------------------------------------------------
-# 1=MainBASE=DATA - ColumnCODE
+# --------------------------
+# 2=DATA - load ColumnCODE
 column_values_code_iter = ws.iter_cols(min_row=2, min_col=column_index_code, max_col=column_index_code, values_only=True)
 column_values_code_list = list(column_values_code_iter)[0]      #[(1, 4, 7)][0] = (1, 4, 7)
 print(column_values_code_list)
 
+# ----------------------------------------------------------------
+# 2=PRICE NEW
