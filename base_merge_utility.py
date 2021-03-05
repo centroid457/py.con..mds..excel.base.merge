@@ -24,12 +24,12 @@ else:
     found_several_bases()
 
 # ================================================================
-# 2=WORK WITH DATA
+# 2=WORK WITH MAIN BASE
 wb = openpyxl.load_workbook(file_name_main_base)
 ws = wb.active
 
 # ----------------------------------------------------------------
-# DETECT COLUMNS
+# DETECT COLUMNS IN HEADER
 row_title = ws[1]
 column_index_from_1 = 1
 for cell in row_title:
@@ -40,10 +40,11 @@ for cell in row_title:
     elif cell_value == "Артикул":
         column_index_art = column_index_from_1
         print(f"колонка Артикул = {column_index_art}")
-
     column_index_from_1 += 1
 
+# ----------------------------------------------------------------
+# make DATA COLUMN CODE
 column_values_code_iter = ws.iter_cols(min_row=2, min_col=column_index_code, max_col=column_index_code, values_only=True)
-column_values_code_list = list(column_values_code_iter)[0] #[(1, 4, 7)][0] = (1, 4, 7)
+column_values_code_list = list(column_values_code_iter)[0]      #[(1, 4, 7)][0] = (1, 4, 7)
 print(column_values_code_list)
 
