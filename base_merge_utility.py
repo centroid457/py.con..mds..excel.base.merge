@@ -58,13 +58,16 @@ ws_price_new = wb_price_new.active
 # 3=DATA LOAD
 # ----------------------------------------------------------------
 # 1=MainBASE
+column_name_code_base = "Код"
+column_values_code_base_null_set = {column_name_code_base, None, ""}
+
 # --------------------------
 # 1=DETECT COLUMNS IN HEADER
 row_title = ws_base[1]
 column_index_base_from_1 = 1
 for cell in row_title:
     cell_value = cell.value
-    if cell_value == "Код":
+    if cell_value == column_name_code_base:
         column_index_base_code = column_index_base_from_1
         print(f"Колонка Код = {column_index_base_code}")
     elif cell_value == "Артикул":
@@ -74,7 +77,7 @@ for cell in row_title:
 
 # --------------------------
 # 2=DATA - load ColumnCODE
-column_values_code_base_iter = ws_base.iter_cols(min_row=2, min_col=column_index_base_code, max_col=column_index_base_code, values_only=True)
+column_values_code_base_iter = ws_base.iter_cols(min_col=column_index_base_code, max_col=column_index_base_code, values_only=True)
 column_values_code_base_list = list(column_values_code_base_iter)[0]      #[(1, 4, 7)][0] = (1, 4, 7)
 # print(column_values_code_base_list)
 column_values_code_base_list_count = len(column_values_code_base_list)
@@ -96,7 +99,8 @@ for pair_key_count_tuple in column_values_code_base_diff_most:
     if pair_key_count_tuple[1] > 1:
         print("pair_key_count_tuple:", pair_key_count_tuple)
         print("pair_key_count_tuple[0]:", pair_key_count_tuple[0])
-        column_values_code_base_diff_list.append(pair_key_count_tuple[0])
+        if pair_key_count_tuple[0] not in column_values_code_base_null_set:
+            column_values_code_base_diff_list.append(pair_key_count_tuple[0])
         print("column_values_code_base_diff_list:", column_values_code_base_diff_list)
         print()
     else:
