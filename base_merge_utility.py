@@ -5,7 +5,7 @@ import collections
 
 # ================================================================
 # 0=SETTINGS
-mask_file_base = "*_admin@madisonorg_*.xlsx"
+mask_file_base = "*_ad???@?adis???rg_*.xlsx"
 mask_file_price = "*Прайс*.xlsx"
 file_opend_startwith_symbols = "~$"
 
