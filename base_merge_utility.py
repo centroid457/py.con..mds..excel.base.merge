@@ -259,9 +259,20 @@ for vendor in vendor_dict:
     print("column_values_vendor_article_repeated_set:", column_values_vendor_article_repeated_set)
     print("*"*80)
 
-    for cell_velue in column_values_vendor_article_all_dict:
-        data_dict = column_values_vendor_article_all_dict[cell_velue]
-        article_value = cell_velue
+    result_marker_dict = dict()
+    for cell_value in column_values_vendor_article_all_dict:
+        data_dict = column_values_vendor_article_all_dict[cell_value]
+        article_value = cell_value
         article_price1 = data_dict["price1"]
         article_mark = data_dict["marker"]
         print(f"{article_mark}=[{article_value}]={article_price1}")
+        if result_marker_dict.get(article_mark, None) is None:
+            result_marker_dict.update({article_mark: set()})
+        result_marker_dict[article_mark].update({article_value})
+
+    print("*"*80)
+    print("MARKERS STATISTICS")
+    for marker in result_marker_dict:
+        print(f"marker[{marker}]=[{len(result_marker_dict[marker])}]count", )
+    print("*"*80)
+
