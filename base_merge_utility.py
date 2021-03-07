@@ -131,50 +131,56 @@ print("count_column_values_code_base_repeated_set:", count_column_values_code_ba
 print("column_values_code_base_repeated_set:", column_values_code_base_repeated_set)
 print("-"*80)
 
-exit()
 # ================================================================
 # 3=VENDOR FILES=WORK
 print("*"*80)
 print(f"START VENDOR WORK")
-# --------------------------
+
 for vendor in vendor_dict:
+    vendor_data_dict = vendor_dict[vendor]
+
+    file_name_vendor = vendor_data_dict["file_found_if_one"]
+    if file_name_vendor is None:
+        continue
+
+    # --------------------------
     # 1=file INIT
     wb_vendor = openpyxl.load_workbook(file_name_vendor)
     ws_vendor = wb_vendor.active
 
     # --------------------------
     # 2=DETECT COLUMNS IN HEADER
-    column_index_vendor_article = 1
+    column_index_vendor_article = vendor_data_dict["column_article_int"]
 
     # --------------------------
     # 3=load DATA - ColumnCODE
-    column_values_article_vendor_all_dict = dict()
-    column_values_article_vendor_repeated_set = set()
+    column_values_vendor_article_all_dict = dict()
+    column_values_vendor_article_repeated_set = set()
 
     print("-"*80)
     print(f"load data from file: [{file_name_vendor}]")
-    print("-"*80)
-    column_values_art_price_iter = ws_price_new.iter_cols(min_col=column_index_vendor_article, max_col=column_index_vendor_article)
-    for column_tuple in column_values_price_iter:
+    print("-"*40)
+    column_values_vendor_article_iter = ws_vendor.iter_cols(min_col=column_index_vendor_article, max_col=column_index_vendor_article)
+    for column_tuple in column_values_vendor_article_iter:
         for cell_obj in column_tuple:
             cell_value = cell_obj.value
-            if cell_value not in column_values_code_base_all_dict:
+            if cell_value not in column_values_vendor_article_all_dict:
                 # print("+", cell_value)
-                column_values_code_base_all_dict.update({cell_value: {"cell_obj_list": [cell_obj, ]}})
+                column_values_vendor_article_all_dict.update({cell_value: {"cell_obj_list": [cell_obj, ]}})
             else:
                 print(f'found repeated value: [{cell_value}]')
-                column_values_code_base_all_dict[cell_value]["cell_obj_list"].append(cell_obj)
-                column_values_code_base_repeated_set.update({cell_value})
+                column_values_vendor_article_all_dict[cell_value]["cell_obj_list"].append(cell_obj)
+                column_values_vendor_article_repeated_set.update({cell_value})
 
     # --------------------------
     # 4=print loadRESULTS
-    count_column_values_code_base_all_dict = len(column_values_code_base_all_dict)
-    count_column_values_code_base_repeated_set = len(column_values_code_base_repeated_set)
+    count_column_values_vendor_article_all_dict = len(column_values_vendor_article_all_dict)
+    count_column_values_vendor_article_repeated_set = len(column_values_vendor_article_repeated_set)
 
-    print("-"*80)
+    print("-"*40)
     # print("from file:", file_name_main_base)
-    print("count_column_values_code_base_all_dict:", count_column_values_code_base_all_dict)
-    print("count_column_values_code_base_repeated_set:", count_column_values_code_base_repeated_set)
+    print("count_column_values_vendor_article_all_dict:", count_column_values_vendor_article_all_dict)
+    print("count_column_values_vendor_article_repeated_set:", count_column_values_vendor_article_repeated_set)
 
-    print("column_values_code_base_repeated_set:", column_values_code_base_repeated_set)
+    print("column_values_vendor_article_repeated_set:", column_values_vendor_article_repeated_set)
     print("*"*80)
