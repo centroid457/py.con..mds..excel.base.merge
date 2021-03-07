@@ -86,15 +86,21 @@ for cell in row_title:
 column_values_code_base_all_dict = dict()
 column_values_code_base_repeated_set = set()
 
+print("*"*80)
 column_values_code_base_iter = ws_base.iter_cols(min_col=column_index_base_code, max_col=column_index_base_code)
-for cell_obj in column_values_code_base_iter:
-    if cell_obj.value not in column_values_code_base_all_dict:
-        column_values_code_base_all_dict.update({cell_obj.value: {"cell_obj_list": [cell_obj, ]}})
-    else:
-        column_values_code_base_all_dict["cell_obj_list"].append(cell_obj)
-        column_values_code_base_repeated_set.update(cell_obj.value)
-
-
+for column_tuple in column_values_code_base_iter:
+    for cell_obj in column_tuple:
+        cell_value = cell_obj.value
+        if cell_value not in column_values_code_base_all_dict:
+            print("+", cell_value)
+            column_values_code_base_all_dict.update({cell_value: {"cell_obj_list": [cell_obj, ]}})
+        else:
+            print("-"*10, cell_value)
+            column_values_code_base_all_dict[cell_value]["cell_obj_list"].append(cell_obj)
+            column_values_code_base_repeated_set.update({cell_value})
+print("*"*80)
+print("column_values_code_base_repeated_set:", column_values_code_base_repeated_set)
+print("*"*80)
 
 # ----------------------------------------------------------------
 # 2=PRICE NEW
