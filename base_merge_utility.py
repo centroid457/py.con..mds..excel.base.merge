@@ -16,7 +16,8 @@ mask_file_base = "*_ad???@?adis???rg_*.xlsx"
 file_opened_startwith_symbols = "~$"
 
 vendor_dict = {"surgaz": {"file_mask": "*surgaz*.xlsx", "file_found_if_one": None,
-                          "column_article_int": 1, "data_article": dict()}}
+                          "column_article_int": 1, "data_article_all_dict": dict(), "data_article_repeated_set": set()},
+               }
 
 column_name_code_base = "Код"
 column_name_art_base = "Артикул"
@@ -154,8 +155,8 @@ for vendor in vendor_dict:
 
     # --------------------------
     # 3=load DATA - ColumnCODE
-    column_values_vendor_article_all_dict = dict()
-    column_values_vendor_article_repeated_set = set()
+    column_values_vendor_article_all_dict = vendor_data_dict["data_article_all_dict"]
+    column_values_vendor_article_repeated_set = vendor_data_dict["data_article_repeated_set"]
 
     print("-"*80)
     print(f"load data from file: [{file_name_vendor}]")
@@ -168,9 +169,10 @@ for vendor in vendor_dict:
                 # print("+", cell_value)
                 column_values_vendor_article_all_dict.update({cell_value: {"cell_obj_list": [cell_obj, ]}})
             else:
-                print(f'found repeated value: [{cell_value}]')
                 column_values_vendor_article_all_dict[cell_value]["cell_obj_list"].append(cell_obj)
                 column_values_vendor_article_repeated_set.update({cell_value})
+                count_repeated = len(column_values_vendor_article_all_dict[cell_value]["cell_obj_list"])
+                print(f'found repeated value: [{cell_value}] \tby [{count_repeated}]times')
 
     # --------------------------
     # 4=print loadRESULTS
