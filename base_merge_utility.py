@@ -145,8 +145,10 @@ for column_tuple in column_values_code_base_iter:
             0=NULL ARTICLE
             1=INFO LINE
             
-            99=NEW PRODUCT!!!
+            99=clear old price!
             100=OK
+            101=NEW PRODUCT!!!
+
             """
         else:
             print(f'found repeated value: [{cell_value}]')
@@ -225,10 +227,13 @@ for vendor in vendor_dict:
                 if cell_obj_price1 is None:
                     if column_values_code_base_all_dict.get(cell_value, None) is None:
                         cell_value_dict["marker"] = 1   # INFO LINE
+                    else:
+                        cell_value_dict["marker"] = 99   # CLEAR
+
                 else:
                     cell_value_dict["price1"] = cell_obj_price1
                     if column_values_code_base_all_dict.get(cell_value, None) is None:
-                        cell_value_dict["marker"] = 99      # NEW PRODUCT!!!
+                        cell_value_dict["marker"] = 101      # NEW PRODUCT!!!
                     else:
                         cell_value_dict["marker"] = 100     # OK
 
