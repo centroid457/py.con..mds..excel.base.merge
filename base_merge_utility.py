@@ -21,7 +21,7 @@ vendor_dict = {"surgaz": {"file_mask": "*surgaz*.xlsx",
                           "mask_article_blank_set": {"Артикул", "Материал", "жизни", },
                           "column_article_int": 1,
                           "column_price1_int": 4,
-                          "data_article_all_dict": dict(), # большой
+                          "data_article_all_dict": dict(),      # большой!
                           "data_article_repeated_set": set()},
                }
 
@@ -109,13 +109,13 @@ for cell in row_title:
         print(f"Номер колонки [{column_name_base_art}] = [{column_index_base_art}]")
     elif cell_value == column_name_base_price1:
         column_index_base_price1 = column_index_base_from_1
-        print(f"Номер колонки [{column_name_base_price1}] = [{column_index_base_price1}]")
+        print(f"Номер колонки price1[{column_name_base_price1}] = [{column_index_base_price1}]")
     elif cell_value == column_name_base_price2:
         column_index_base_price2 = column_index_base_from_1
-        print(f"Номер колонки [{column_name_base_price2}] = [{column_index_base_price2}]")
+        print(f"Номер колонки price2[{column_name_base_price2}] = [{column_index_base_price2}]")
     elif cell_value == column_name_base_price3:
         column_index_base_price3 = column_index_base_from_1
-        print(f"Номер колонки [{column_name_base_price3}] = [{column_index_base_price3}]")
+        print(f"Номер колонки price3[{column_name_base_price3}] = [{column_index_base_price3}]")
     column_index_base_from_1 += 1
 
 # --------------------------
@@ -140,9 +140,12 @@ for column_tuple in column_values_code_base_iter:
                                                                   }})
             """
             MARKER
+            
+            -1=INCORRECT DATA=exists different price for one article
             0=NULL ARTICLE
             1=INFO LINE
-            13=INCORRECT DATA=exists different price for one article
+            
+            99=NEW PRODUCT!!!
             100=OK
             """
         else:
@@ -210,16 +213,24 @@ for vendor in vendor_dict:
                 cell_value_dict = column_values_vendor_article_all_dict[cell_value]
                 cell_obj_price1 = ws_vendor.cell(row=cell_obj.row, column=column_index_vendor_price1).value
 
+                # check FOR BLANK
                 if cell_value in vendor_data_dict["article_blank_set"]:
                     cell_value_dict["marker"] = 0   # NULL ARTICLE
+                    continue
                 elif all([mask in cell_value for mask in vendor_data_dict["mask_article_blank_set"]]):
                     cell_value_dict["marker"] = 1   # INFO LINE
+                    continue
 
-                elif cell_obj_price1 is not None:
+                # check FOR PRICE
+                if cell_obj_price1 is None:
+                    if column_values_code_base_all_dict.get(cell_value, None) is None:
+                        cell_value_dict["marker"] = 1   # INFO LINE
+                else:
                     cell_value_dict["price1"] = cell_obj_price1
-                    cell_value_dict["marker"] = 100   # OK
-                elif cell_obj_price1 is None and column_values_code_base_all_dict.get(cell_value, None) is None:
-                    cell_value_dict["marker"] = 1   # INFO LINE
+                    if column_values_code_base_all_dict.get(cell_value, None) is None:
+                        cell_value_dict["marker"] = 99      # NEW PRODUCT!!!
+                    else:
+                        cell_value_dict["marker"] = 100     # OK
 
             else:
                 cell_value_dict = column_values_vendor_article_all_dict[cell_value]
@@ -233,7 +244,7 @@ for vendor in vendor_dict:
                     column_values_vendor_article_repeated_set.update({cell_value})
                     count_repeated = len(column_values_vendor_article_all_dict[cell_value]["cell_obj_list"])
                     print(f'found repeated value: [{cell_value}] \tby [{count_repeated}]times')
-                    cell_value_dict["marker"] = 13   # INCORRECT DATA=exists different price for one article
+                    cell_value_dict["marker"] = -1   # INCORRECT DATA=exists different price for one article
 
     # --------------------------
     # 4=print loadRESULTS
