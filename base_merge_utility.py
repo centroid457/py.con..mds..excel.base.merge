@@ -175,12 +175,18 @@ for vendor in vendor_dict:
 
             if cell_value not in column_values_vendor_article_all_dict:
                 # print("+", cell_value)
-                column_values_vendor_article_all_dict.update({cell_value: {"cell_obj_list": [cell_obj, ], "marker": None}})
+                column_values_vendor_article_all_dict.update({cell_value: {"cell_obj_list": [cell_obj, ],
+                                                                           "marker": None,
+                                                                           "price1": None,
+                                                                           "price2": None,
+                                                                           "price3": None,
+                                                                           }})
                 """
                 MARKER
                 0=NULL ARTICLE
                 1=INFO LINE
-                100=INCORRECT DATA=exists different price for one article
+                13=INCORRECT DATA=exists different price for one article
+                100=OK
                 """
                 cell_value_dict = column_values_vendor_article_all_dict[cell_value]
                 cell_obj_price1 = ws_vendor.cell(row=cell_obj.row, column=column_index_vendor_price1).value
@@ -189,6 +195,10 @@ for vendor in vendor_dict:
                     cell_value_dict["marker"] = 0   # NULL ARTICLE
                 elif all([mask in cell_value for mask in vendor_data_dict["mask_article_blank_set"]]):
                     cell_value_dict["marker"] = 1   # INFO LINE
+
+                elif cell_obj_price1 is not None:
+                    cell_value_dict["price1"] = cell_obj_price1
+                    cell_value_dict["marker"] = 100   # OK
                 elif cell_obj_price1 is None and column_values_code_base_all_dict.get(cell_value, None) is not None:
                     cell_value_dict["marker"] = 1   # INFO LINE
 
@@ -204,8 +214,7 @@ for vendor in vendor_dict:
                     column_values_vendor_article_repeated_set.update({cell_value})
                     count_repeated = len(column_values_vendor_article_all_dict[cell_value]["cell_obj_list"])
                     print(f'found repeated value: [{cell_value}] \tby [{count_repeated}]times')
-                    cell_value_dict["marker"] = 100   # INCORRECT DATA=exists different price for one article
-
+                    cell_value_dict["marker"] = 13   # INCORRECT DATA=exists different price for one article
 
     # --------------------------
     # 4=print loadRESULTS
@@ -219,3 +228,10 @@ for vendor in vendor_dict:
 
     print("column_values_vendor_article_repeated_set:", column_values_vendor_article_repeated_set)
     print("*"*80)
+
+    for cell_velue in column_values_vendor_article_all_dict:
+        data_dict = column_values_vendor_article_all_dict[cell_velue]
+        article_value = cell_velue
+        article_price1 = data_dict["price1"]
+        article_mark = data_dict["marker"]
+        print(f"{article_mark}=[{article_value}]={article_price1}")
