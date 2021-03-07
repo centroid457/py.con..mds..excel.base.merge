@@ -9,8 +9,8 @@ mask_file_price = "*Прайс*.xlsx"
 file_opend_startwith_symbols = "~$"
 
 column_name_code_base = "Код"
+column_name_art_base = "Артикул"
 column_values_code_base_null_set = {column_name_code_base, None, ""}
-
 
 # ================================================================
 # 1=DETECT FILES
@@ -75,10 +75,10 @@ for cell in row_title:
     cell_value = cell.value
     if cell_value == column_name_code_base:
         column_index_base_code = column_index_base_from_1
-        print(f"Колонка Код = {column_index_base_code}")
-    elif cell_value == "Артикул":
+        print(f"Номер колонки [{column_name_code_base}] = [{column_index_base_code}]")
+    elif cell_value == column_name_art_base:
         column_index_base_art = column_index_base_from_1
-        print(f"Колонка Артикул = {column_index_base_art}")
+        print(f"Номер колонки [{column_name_art_base}] = [{column_index_base_art}]")
     column_index_base_from_1 += 1
 
 # --------------------------
@@ -87,7 +87,7 @@ column_values_code_base_all_dict = dict()
 column_values_code_base_repeated_set = set()
 
 print("*"*80)
-print("load data from file:", file_name_main_base)
+print(f"load data from file: [{file_name_main_base}]")
 print("*"*80)
 column_values_code_base_iter = ws_base.iter_cols(min_col=column_index_base_code, max_col=column_index_base_code)
 for column_tuple in column_values_code_base_iter:
