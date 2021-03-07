@@ -1,3 +1,9 @@
+"""
+ЧТО НЕОБХОДИМО ДЕЛАТЬ ДЛЯ НОРМАЛЬНОЙ РАБОТЫ программы
+1. файлы новых прайсов
+    - содержать в имени слово "Прайс" (в любой раскладке)
+    - содержать имя поставщика например "surgaz" (в любой раскладке)
+"""
 import openpyxl
 import sys
 import glob
@@ -6,7 +12,9 @@ import glob
 # 0=SETTINGS
 mask_file_base = "*_ad???@?adis???rg_*.xlsx"
 mask_file_price = "*Прайс*.xlsx"
-file_opend_startwith_symbols = "~$"
+file_opened_startwith_symbols = "~$"
+
+vendor_dict = {"surgaz": {"column_article": 1} }
 
 column_name_code_base = "Код"
 column_name_art_base = "Артикул"
@@ -28,7 +36,7 @@ if len(file_name_main_base_found_list) == 1:
     file_name_main_base = file_name_main_base_found_list[0]
 elif len(file_name_main_base_found_list) == 2:
     for file in file_name_main_base_found_list:
-        if file.startswith(file_opend_startwith_symbols):
+        if file.startswith(file_opened_startwith_symbols):
             print("ОШИБКА: файл главной базы открыт! закройте его и перезапустите приложение!", file=sys.stderr)
             input("Нажмите Enter для выхода")
             sys.exit()
@@ -47,9 +55,8 @@ if len(file_name_price_new_found_list) > 1:
     input("Нажмите Enter для выхода")
     sys.exit()
 
-# пока безсмысленный код поиска открытых!!!
 for file in file_name_price_new_found_list:
-    if file.startswith(file_opend_startwith_symbols):
+    if file.startswith(file_opened_startwith_symbols):
         print("ОШИБКА: найдены открытые файлы новых цен! закройте их и перезапустите приложение!", file=sys.stderr)
         input("Нажмите Enter для выхода")
         sys.exit()
