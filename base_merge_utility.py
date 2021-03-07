@@ -172,15 +172,29 @@ for vendor in vendor_dict:
     for column_tuple in column_values_vendor_article_iter:
         for cell_obj in column_tuple:
             cell_value = cell_obj.value
-            if cell_value in vendor_data_dict["article_blank_set"]:
-                continue
-            elif all([mask in cell_value for mask in vendor_data_dict["mask_article_blank_set"]]):
-                continue
-            elif cell_value not in column_values_vendor_article_all_dict:
-                print("+", cell_value)
-                column_values_vendor_article_all_dict.update({cell_value: {"cell_obj_list": [cell_obj, ]}})
+
+            if cell_value not in column_values_vendor_article_all_dict:
+                # print("+", cell_value)
+                column_values_vendor_article_all_dict.update({cell_value: {"cell_obj_list": [cell_obj, ], "marker": None}})
+                """
+                MARKER
+                0=NULL ARTICLE
+                1=INFO LINE
+                100=INCORRECT DATA=exists different price for one article
+                """
+                cell_value_dict = column_values_vendor_article_all_dict[cell_value]
+                cell_obj_price1 = ws_vendor.cell(row=cell_obj.row, column=column_index_vendor_price1).value
+
+                if cell_value in vendor_data_dict["article_blank_set"]:
+                    cell_value_dict["marker"] = 0   # NULL ARTICLE
+                elif all([mask in cell_value for mask in vendor_data_dict["mask_article_blank_set"]]):
+                    cell_value_dict["marker"] = 1   # INFO LINE
+                elif cell_obj_price1 is None and column_values_code_base_all_dict.get(cell_value, None) is not None:
+                    cell_value_dict["marker"] = 1   # INFO LINE
+
             else:
-                cell_obj_list = column_values_vendor_article_all_dict[cell_value]["cell_obj_list"]
+                cell_value_dict = column_values_vendor_article_all_dict[cell_value]
+                cell_obj_list = cell_value_dict["cell_obj_list"]
                 cell_obj_list.append(cell_obj)
 
                 # check indent price! may be it was several articles but indent price! it is OK!
@@ -190,6 +204,8 @@ for vendor in vendor_dict:
                     column_values_vendor_article_repeated_set.update({cell_value})
                     count_repeated = len(column_values_vendor_article_all_dict[cell_value]["cell_obj_list"])
                     print(f'found repeated value: [{cell_value}] \tby [{count_repeated}]times')
+                    cell_value_dict["marker"] = 100   # INCORRECT DATA=exists different price for one article
+
 
     # --------------------------
     # 4=print loadRESULTS
