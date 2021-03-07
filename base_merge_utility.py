@@ -119,7 +119,19 @@ for column_tuple in column_values_code_base_iter:
         cell_value = cell_obj.value
         if cell_value not in column_values_code_base_all_dict:
             # print("+", cell_value)
-            column_values_code_base_all_dict.update({cell_value: {"cell_obj_list": [cell_obj, ]}})
+            column_values_code_base_all_dict.update({cell_value: {"cell_obj_list": [cell_obj, ],
+                                                                  "marker": None,
+                                                                  "price1": None,
+                                                                  "price2": None,
+                                                                  "price3": None,
+                                                                  }})
+            """
+            MARKER
+            0=NULL ARTICLE
+            1=INFO LINE
+            13=INCORRECT DATA=exists different price for one article
+            100=OK
+            """
         else:
             print(f'found repeated value: [{cell_value}]')
             column_values_code_base_all_dict[cell_value]["cell_obj_list"].append(cell_obj)
@@ -181,13 +193,7 @@ for vendor in vendor_dict:
                                                                            "price2": None,
                                                                            "price3": None,
                                                                            }})
-                """
-                MARKER
-                0=NULL ARTICLE
-                1=INFO LINE
-                13=INCORRECT DATA=exists different price for one article
-                100=OK
-                """
+
                 cell_value_dict = column_values_vendor_article_all_dict[cell_value]
                 cell_obj_price1 = ws_vendor.cell(row=cell_obj.row, column=column_index_vendor_price1).value
 
@@ -199,7 +205,7 @@ for vendor in vendor_dict:
                 elif cell_obj_price1 is not None:
                     cell_value_dict["price1"] = cell_obj_price1
                     cell_value_dict["marker"] = 100   # OK
-                elif cell_obj_price1 is None and column_values_code_base_all_dict.get(cell_value, None) is not None:
+                elif cell_obj_price1 is None and column_values_code_base_all_dict.get(cell_value, None) is None:
                     cell_value_dict["marker"] = 1   # INFO LINE
 
             else:
