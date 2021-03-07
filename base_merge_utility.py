@@ -1,7 +1,6 @@
 import openpyxl
 import sys
 import glob
-import collections
 
 # ================================================================
 # 0=SETTINGS
@@ -84,37 +83,18 @@ for cell in row_title:
 
 # --------------------------
 # 2=DATA - load ColumnCODE
-column_values_code_base_iter = ws_base.iter_cols(min_col=column_index_base_code, max_col=column_index_base_code, values_only=True)
-column_values_code_base_list = list(column_values_code_base_iter)[0]      #[(1, 4, 7)][0] = (1, 4, 7)
-# print(column_values_code_base_list)
-column_values_code_base_list_count = len(column_values_code_base_list)
-print("column_values_code_base_list_count:", column_values_code_base_list_count)
-column_values_code_base_set = set(column_values_code_base_list)
-column_values_code_base_set_count = len(column_values_code_base_set)
-print("column_values_code_base_set_count:", column_values_code_base_set_count)
+column_values_code_base_all_dict = dict()
+column_values_code_base_repeated_set = set()
 
-column_values_code_base_diff_count = column_values_code_base_list_count - column_values_code_base_set_count
-print("column_values_code_base_diff_count:", column_values_code_base_diff_count)
-
-column_values_code_base_diff_counter = collections.Counter(column_values_code_base_list)
-column_values_code_base_diff_most = column_values_code_base_diff_counter.most_common(column_values_code_base_diff_count)
-
-column_values_code_base_diff_list = []
-for pair_key_count_tuple in column_values_code_base_diff_most:
-    print()
-
-    if pair_key_count_tuple[1] > 1:
-        print("pair_key_count_tuple:", pair_key_count_tuple)
-        print("pair_key_count_tuple[0]:", pair_key_count_tuple[0])
-        if pair_key_count_tuple[0] not in column_values_code_base_null_set:
-            column_values_code_base_diff_list.append(pair_key_count_tuple[0])
-        print("column_values_code_base_diff_list:", column_values_code_base_diff_list)
-        print()
+column_values_code_base_iter = ws_base.iter_cols(min_col=column_index_base_code, max_col=column_index_base_code)
+for cell_obj in column_values_code_base_iter:
+    if cell_obj.value not in column_values_code_base_all_dict:
+        column_values_code_base_all_dict.update({cell_obj.value: {"cell_obj_list": [cell_obj, ]}})
     else:
-        break
+        column_values_code_base_all_dict["cell_obj_list"].append(cell_obj)
+        column_values_code_base_repeated_set.update(cell_obj.value)
 
-column_values_code_base_diff_set = set(column_values_code_base_diff_list)
-print("column_values_code_base_diff_set:", column_values_code_base_diff_set)
+
 
 # ----------------------------------------------------------------
 # 2=PRICE NEW
