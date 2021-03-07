@@ -15,8 +15,14 @@ import glob
 mask_file_base = "*_ad???@?adis???rg_*.xlsx"
 file_opened_startwith_symbols = "~$"
 
-vendor_dict = {"surgaz": {"file_mask": "*surgaz*.xlsx", "file_found_if_one": None,
-                          "column_article_int": 1, "data_article_all_dict": dict(), "data_article_repeated_set": set()},
+vendor_dict = {"surgaz": {"file_mask": "*surgaz*.xlsx",
+                          "file_found_if_one": None,
+                          "article_blank_set": {None, ""},
+                          "mask_article_blank_set": {"Артикул", "Материал", "жизни", },
+                          "column_article_int": 1,
+                          "column_price1_int": 4,
+                          "data_article_all_dict": dict(), # большой
+                          "data_article_repeated_set": set()},
                }
 
 column_name_code_base = "Код"
@@ -152,6 +158,7 @@ for vendor in vendor_dict:
     # --------------------------
     # 2=DETECT COLUMNS IN HEADER
     column_index_vendor_article = vendor_data_dict["column_article_int"]
+    column_index_vendor_price1 = vendor_data_dict["column_price1_int"]
 
     # --------------------------
     # 3=load DATA - ColumnCODE
@@ -165,14 +172,24 @@ for vendor in vendor_dict:
     for column_tuple in column_values_vendor_article_iter:
         for cell_obj in column_tuple:
             cell_value = cell_obj.value
-            if cell_value not in column_values_vendor_article_all_dict:
-                # print("+", cell_value)
+            if cell_value in vendor_data_dict["article_blank_set"]:
+                continue
+            elif all([mask in cell_value for mask in vendor_data_dict["mask_article_blank_set"]]):
+                continue
+            elif cell_value not in column_values_vendor_article_all_dict:
+                print("+", cell_value)
                 column_values_vendor_article_all_dict.update({cell_value: {"cell_obj_list": [cell_obj, ]}})
             else:
-                column_values_vendor_article_all_dict[cell_value]["cell_obj_list"].append(cell_obj)
-                column_values_vendor_article_repeated_set.update({cell_value})
-                count_repeated = len(column_values_vendor_article_all_dict[cell_value]["cell_obj_list"])
-                print(f'found repeated value: [{cell_value}] \tby [{count_repeated}]times')
+                cell_obj_list = column_values_vendor_article_all_dict[cell_value]["cell_obj_list"]
+                cell_obj_list.append(cell_obj)
+
+                # check indent price! may be it was several articles but indent price! it is OK!
+                cell_obj_price1_last = ws_vendor.cell(row=cell_obj_list[-1].row, column=column_index_vendor_price1).value
+                cell_obj_price1_prev = ws_vendor.cell(row=cell_obj_list[-2].row, column=column_index_vendor_price1).value
+                if cell_obj_price1_last != cell_obj_price1_prev:
+                    column_values_vendor_article_repeated_set.update({cell_value})
+                    count_repeated = len(column_values_vendor_article_all_dict[cell_value]["cell_obj_list"])
+                    print(f'found repeated value: [{cell_value}] \tby [{count_repeated}]times')
 
     # --------------------------
     # 4=print loadRESULTS
