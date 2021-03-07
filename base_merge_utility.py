@@ -98,7 +98,15 @@ for column_tuple in column_values_code_base_iter:
             print("-"*10, cell_value)
             column_values_code_base_all_dict[cell_value]["cell_obj_list"].append(cell_obj)
             column_values_code_base_repeated_set.update({cell_value})
+
+# RESULTS
+count_column_values_code_base_all_dict = len(column_values_code_base_all_dict)
+count_column_values_code_base_repeated_set = len(column_values_code_base_repeated_set)
+
 print("*"*80)
+print("count_column_values_code_base_all_dict:", count_column_values_code_base_all_dict)
+print("count_column_values_code_base_repeated_set:", count_column_values_code_base_repeated_set)
+
 print("column_values_code_base_repeated_set:", column_values_code_base_repeated_set)
 print("*"*80)
 
