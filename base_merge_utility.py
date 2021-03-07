@@ -25,9 +25,13 @@ vendor_dict = {"surgaz": {"file_mask": "*surgaz*.xlsx",
                           "data_article_repeated_set": set()},
                }
 
-column_name_code_base = "Код"
-column_name_art_base = "Артикул"
-column_values_code_base_null_set = {column_name_code_base, None, ""}
+column_name_base_code = "Код"
+column_name_base_art = "Артикул"
+column_name_base_price1 = "Цена: Цена продажи"
+column_name_base_price2 = "Цена: РРЦ"
+column_name_base_price3 = "Закупочная цена"
+
+column_values_code_base_null_set = {column_name_base_code, None, ""}
 
 # ================================================================
 # 1=DETECT FILES
@@ -97,12 +101,21 @@ row_title = ws_base[1]
 column_index_base_from_1 = 1
 for cell in row_title:
     cell_value = cell.value
-    if cell_value == column_name_code_base:
+    if cell_value == column_name_base_code:
         column_index_base_code = column_index_base_from_1
-        print(f"Номер колонки [{column_name_code_base}] = [{column_index_base_code}]")
-    elif cell_value == column_name_art_base:
+        print(f"Номер колонки [{column_name_base_code}] = [{column_index_base_code}]")
+    elif cell_value == column_name_base_art:
         column_index_base_art = column_index_base_from_1
-        print(f"Номер колонки [{column_name_art_base}] = [{column_index_base_art}]")
+        print(f"Номер колонки [{column_name_base_art}] = [{column_index_base_art}]")
+    elif cell_value == column_name_base_price1:
+        column_index_base_price1 = column_index_base_from_1
+        print(f"Номер колонки [{column_name_base_price1}] = [{column_index_base_price1}]")
+    elif cell_value == column_name_base_price2:
+        column_index_base_price2 = column_index_base_from_1
+        print(f"Номер колонки [{column_name_base_price2}] = [{column_index_base_price2}]")
+    elif cell_value == column_name_base_price3:
+        column_index_base_price3 = column_index_base_from_1
+        print(f"Номер колонки [{column_name_base_price3}] = [{column_index_base_price3}]")
     column_index_base_from_1 += 1
 
 # --------------------------
