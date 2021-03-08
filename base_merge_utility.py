@@ -17,10 +17,13 @@ file_opened_startwith_symbols = "~$"
 
 vendor_dict = {"surgaz": {"file_mask": "*surgaz*.xlsx",
                           "file_found_if_one": None,
-                          "article_blank_set": {None, ""},
-                          "mask_article_blank_set": {"Артикул", "Материал", "жизни", },
+
                           "column_article_int": 1,
                           "column_price1_int": 4,
+
+                          "article_blank_set": {None, ""},
+                          "article_mask_blank_set": {"Артикул", "Материал", "жизни", },
+
                           "data_article_all_dict": dict(),      # большой!
                           "data_article_repeated_set": set()},
                }
@@ -219,7 +222,7 @@ for vendor in vendor_dict:
                 if cell_value in vendor_data_dict["article_blank_set"]:
                     cell_value_dict["marker"] = 0   # NULL ARTICLE
                     continue
-                elif all([mask in cell_value for mask in vendor_data_dict["mask_article_blank_set"]]):
+                elif all([mask in cell_value for mask in vendor_data_dict["article_mask_blank_set"]]):
                     cell_value_dict["marker"] = 1   # INFO LINE
                     continue
 
