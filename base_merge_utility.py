@@ -114,6 +114,7 @@ for column_tuple in cell_iter_cols:
         cell_value = cell_obj.value
         if cell_value == base_header_detect_cell_value:
             base_header_row_int = cell_obj.row
+            print(f"header line row = [{base_header_row_int}]")
 
 # --------------------------
 # 3=DETECT COLUMNS IN HEADER
@@ -157,10 +158,15 @@ for column_tuple in column_values_code_base_iter:
                                                                   "price2": None,
                                                                   "price3": None,
                                                                   }})
-            column_values_code_base_all_dict["price1"] = ws_base.cell(row=cell_obj.row, column=base_column_index_price1).value
-            column_values_code_base_all_dict["price2"] = ws_base.cell(row=cell_obj.row, column=base_column_index_price2).value
-            column_values_code_base_all_dict["price3"] = ws_base.cell(row=cell_obj.row, column=base_column_index_price3).value
+            price1 = ws_base.cell(row=cell_obj.row, column=base_column_index_price1).value
+            price2 = ws_base.cell(row=cell_obj.row, column=base_column_index_price2).value
+            price3 = ws_base.cell(row=cell_obj.row, column=base_column_index_price3).value
 
+            column_values_code_base_all_dict["price1"] = price1
+            column_values_code_base_all_dict["price2"] = price2
+            column_values_code_base_all_dict["price3"] = price3
+
+            print(f"[{cell_value}]{price1}/{price2}/{price3}")
         else:
             print(f'found repeated value: [{cell_value}]')
             column_values_code_base_all_dict[cell_value]["cell_obj_list"].append(cell_obj)
