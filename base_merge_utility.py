@@ -34,9 +34,6 @@ vendor_dict = {"surgaz": {"file_mask": "*surgaz*.xlsx",
                           "column_detect_price2": "МРЦ",
                           "column_detect_price3": None,     # need formula!!!!
 
-                          "column_article_int": 1,
-                          "column_price1_int": 4,
-
                           "article_blank_set": {None, ""},
                           "article_mask_blank_set": {"Артикул", "Материал", "жизни", },
 
@@ -156,23 +153,14 @@ for column_tuple in column_values_code_base_iter:
         if cell_value not in column_values_code_base_all_dict:
             # print("+", cell_value)
             column_values_code_base_all_dict.update({cell_value: {"cell_obj_list": [cell_obj, ],
-                                                                  "marker": None,
                                                                   "price1": None,
                                                                   "price2": None,
                                                                   "price3": None,
                                                                   }})
-            """
-            MARKER
-            
-            -1=INCORRECT DATA=exists different price for one article
-            0=NULL ARTICLE
-            1=INFO LINE
-            
-            99=clear old price!
-            100=OK=renew price!
-            101=NEW PRODUCT!!!
+            column_values_code_base_all_dict["price1"] = ws_base.cell(row=cell_obj.row, column=base_column_index_price1).value
+            column_values_code_base_all_dict["price2"] = ws_base.cell(row=cell_obj.row, column=base_column_index_price2).value
+            column_values_code_base_all_dict["price3"] = ws_base.cell(row=cell_obj.row, column=base_column_index_price3).value
 
-            """
         else:
             print(f'found repeated value: [{cell_value}]')
             column_values_code_base_all_dict[cell_value]["cell_obj_list"].append(cell_obj)
@@ -259,9 +247,20 @@ for vendor in vendor_dict:
                                                                            "price2": None,
                                                                            "price3": None,
                                                                            }})
+                """
+                MARKER
 
+                -1=INCORRECT DATA=exists different price for one article
+                0=NULL ARTICLE
+                1=INFO LINE
+
+                99=clear old price!
+                100=OK=renew price!
+                101=NEW PRODUCT!!!
+                """
                 cell_value_dict = column_values_vendor_article_all_dict[cell_value]
                 cell_obj_price1 = ws_vendor.cell(row=cell_obj.row, column=vendor_column_index_price1).value
+                cell_obj_price2 = ws_vendor.cell(row=cell_obj.row, column=vendor_column_index_price2).value
 
                 # check FOR BLANK
                 if cell_value in vendor_data_dict["article_blank_set"]:
@@ -280,6 +279,8 @@ for vendor in vendor_dict:
 
                 else:
                     cell_value_dict["price1"] = cell_obj_price1
+                    cell_value_dict["price2"] = cell_obj_price2
+
                     if column_values_code_base_all_dict.get(cell_value, None) is None:
                         cell_value_dict["marker"] = 101      # NEW PRODUCT!!!
                     else:
@@ -316,9 +317,19 @@ for vendor in vendor_dict:
     for cell_value in column_values_vendor_article_all_dict:
         data_dict = column_values_vendor_article_all_dict[cell_value]
         article_value = cell_value
-        article_price1 = data_dict["price1"]
         article_mark = data_dict["marker"]
-        print(f"{article_mark}=[{article_value}]={article_price1}")
+
+        vendor_article_price1 = data_dict["price1"]
+        vendor_article_price2 = data_dict["price2"]
+        vendor_article_price3 = data_dict["price3"]
+
+        if article_mark == 100:
+            base_article_price1 = column_values_code_base_all_dict[article_value]["price1"]
+            base_article_price2 = column_values_code_base_all_dict[article_value]["price2"]
+            base_article_price3 = column_values_code_base_all_dict[article_value]["price3"]
+
+            print(f"{article_mark}={base_article_price1}/{base_article_price2}/{base_article_price3}[{article_value}]{vendor_article_price1}/{vendor_article_price2}/{vendor_article_price3}")
+
         if result_marker_dict.get(article_mark, None) is None:
             result_marker_dict.update({article_mark: set()})
         result_marker_dict[article_mark].update({article_value})
