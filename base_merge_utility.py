@@ -209,9 +209,34 @@ for vendor in vendor_dict:
     ws_vendor = wb_vendor.active
 
     # --------------------------
-    # 2=DETECT COLUMNS IN HEADER
-    column_index_vendor_article = vendor_data_dict["column_article_int"]
-    column_index_vendor_price1 = vendor_data_dict["column_price1_int"]
+    # 2=DETECT HEADER LINE ROW
+    cell_iter_cols = ws_vendor.iter_cols(max_row=find_header_line_square_int, max_col=find_header_line_square_int)
+    for column_tuple in cell_iter_cols:
+        for cell_obj in column_tuple:
+            cell_value = cell_obj.value
+            if cell_value == vendor_data_dict["header_detect_cell_value"]:
+                vendor_header_row_int = cell_obj.row
+
+    # --------------------------
+    # 3=DETECT COLUMNS IN HEADER
+    row_title = ws_vendor[vendor_header_row_int]
+    column_seek_index = 1
+    for cell in row_title:
+        cell_value = cell.value
+        if cell_value == vendor_data_dict["column_detect_article"]:
+            vendor_column_index_article = column_seek_index
+            print(f"Номер колонки [column_detect_article] = [{vendor_column_index_article}]")
+        elif cell_value == vendor_data_dict["column_detect_price1"]:
+            vendor_column_index_price1 = column_seek_index
+            print(f"Номер колонки price1[vendor_column_detect_price1] = [{vendor_column_index_price1}]")
+        elif cell_value == vendor_data_dict["column_detect_price2"]:
+            vendor_column_index_price2 = column_seek_index
+            print(f"Номер колонки price2[vendor_column_detect_price2] = [{vendor_column_index_price2}]")
+        elif cell_value == vendor_data_dict["column_detect_price3"]:
+            pass
+            # vendor_column_index_price3 = column_seek_index
+            # print(f"Номер колонки price3[vendor_column_detect_price3] = [{vendor_column_index_price3}]")
+        column_seek_index += 1
 
     # --------------------------
     # 3=load DATA - ColumnCODE
@@ -221,7 +246,7 @@ for vendor in vendor_dict:
     print("-"*80)
     print(f"load data from file: [{file_name_vendor}]")
     print("-"*40)
-    column_values_vendor_article_iter = ws_vendor.iter_cols(min_col=column_index_vendor_article, max_col=column_index_vendor_article)
+    column_values_vendor_article_iter = ws_vendor.iter_cols(min_col=vendor_column_index_article, max_col=vendor_column_index_article)
     for column_tuple in column_values_vendor_article_iter:
         for cell_obj in column_tuple:
             cell_value = cell_obj.value
@@ -236,7 +261,7 @@ for vendor in vendor_dict:
                                                                            }})
 
                 cell_value_dict = column_values_vendor_article_all_dict[cell_value]
-                cell_obj_price1 = ws_vendor.cell(row=cell_obj.row, column=column_index_vendor_price1).value
+                cell_obj_price1 = ws_vendor.cell(row=cell_obj.row, column=vendor_column_index_price1).value
 
                 # check FOR BLANK
                 if cell_value in vendor_data_dict["article_blank_set"]:
@@ -266,8 +291,8 @@ for vendor in vendor_dict:
                 cell_obj_list.append(cell_obj)
 
                 # check indent price! may be it was several articles but indent price! it is OK!
-                cell_obj_price1_last = ws_vendor.cell(row=cell_obj_list[-1].row, column=column_index_vendor_price1).value
-                cell_obj_price1_prev = ws_vendor.cell(row=cell_obj_list[-2].row, column=column_index_vendor_price1).value
+                cell_obj_price1_last = ws_vendor.cell(row=cell_obj_list[-1].row, column=vendor_column_index_price1).value
+                cell_obj_price1_prev = ws_vendor.cell(row=cell_obj_list[-2].row, column=vendor_column_index_price1).value
                 if cell_obj_price1_last != cell_obj_price1_prev:
                     column_values_vendor_article_repeated_set.update({cell_value})
                     count_repeated = len(column_values_vendor_article_all_dict[cell_value]["cell_obj_list"])
