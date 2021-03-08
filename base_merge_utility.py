@@ -102,27 +102,33 @@ wb_base = openpyxl.load_workbook(file_base)
 ws_base = wb_base.active
 
 # --------------------------
-# 2=DETECT COLUMNS IN HEADER
+# 2=DETECT HEADER LINE
+
+
+header_line_int = 1
+
+# --------------------------
+# 3=DETECT COLUMNS IN HEADER
 row_title = ws_base[1]
-column_index = 1
+column_seek_index = 1
 for cell in row_title:
     cell_value = cell.value
     if cell_value == base_column_name_code:
-        base_column_index_code = column_index
+        base_column_index_code = column_seek_index
         print(f"Номер колонки [{base_column_name_code}] = [{base_column_index_code}]")
     elif cell_value == base_column_name_art:
-        base_column_index_art = column_index
+        base_column_index_art = column_seek_index
         print(f"Номер колонки [{base_column_name_art}] = [{base_column_index_art}]")
     elif cell_value == base_column_name_price1:
-        base_column_index_price1 = column_index
+        base_column_index_price1 = column_seek_index
         print(f"Номер колонки price1[{base_column_name_price1}] = [{base_column_index_price1}]")
     elif cell_value == base_column_name_price2:
-        base_column_index_price2 = column_index
+        base_column_index_price2 = column_seek_index
         print(f"Номер колонки price2[{base_column_name_price2}] = [{base_column_index_price2}]")
     elif cell_value == base_column_name_price3:
-        base_column_index_price3 = column_index
+        base_column_index_price3 = column_seek_index
         print(f"Номер колонки price3[{base_column_name_price3}] = [{base_column_index_price3}]")
-    column_index += 1
+    column_seek_index += 1
 
 # --------------------------
 # 3=load DATA - ColumnCODE
