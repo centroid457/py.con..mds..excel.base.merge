@@ -46,15 +46,18 @@ print(f"START finding files MainBASE")
 file_base_found_list = glob.glob(file_base_mask)
 print("Найдены файлы главной базы:", file_base_found_list)
 
+
 def files_found_several(type_txt):
     print(f"ОШИБКА: найдено несколько файлов {type_txt}! уберите лишние! и перезапустите приложение", file=sys.stderr)
     input("Нажмите Enter для выхода")
     sys.exit()
 
+
 def files_found_opened(type_txt):
     print(f"ОШИБКА: найден открытый файл {type_txt}! закройте его и перезапустите приложение", file=sys.stderr)
     input("Нажмите Enter для выхода")
     sys.exit()
+
 
 if len(file_base_found_list) == 1:
     file_base = file_base_found_list[0]
@@ -283,4 +286,3 @@ for vendor in vendor_dict:
     for marker in result_marker_dict:
         print(f"marker[{marker}]=[{len(result_marker_dict[marker])}]count", )
     print("*"*80)
-
