@@ -12,7 +12,7 @@ import glob
 
 # ================================================================
 # 0=SETTINGS
-mask_file_base = "*_ad???@?adis???rg_*.xlsx"
+file_base_mask = "*_ad???@?adis???rg_*.xlsx"
 file_opened_startwith_symbols = "~$"
 
 vendor_dict = {"surgaz": {"file_mask": "*surgaz*.xlsx",
@@ -28,13 +28,13 @@ vendor_dict = {"surgaz": {"file_mask": "*surgaz*.xlsx",
                           "data_article_repeated_set": set()},
                }
 
-column_name_base_code = "Код"
-column_name_base_art = "Артикул"
-column_name_base_price1 = "Цена: Цена продажи"
-column_name_base_price2 = "Цена: РРЦ"
-column_name_base_price3 = "Закупочная цена"
+base_column_name_code = "Код"
+base_column_name_art = "Артикул"
+base_column_name_price1 = "Цена: Цена продажи"
+base_column_name_price2 = "Цена: РРЦ"
+base_column_name_price3 = "Закупочная цена"
 
-column_values_code_base_null_set = {column_name_base_code, None, ""}
+base_column_values_code_null_set = {base_column_name_code, None, ""}
 
 # ================================================================
 # 1=DETECT FILES
@@ -43,8 +43,8 @@ column_values_code_base_null_set = {column_name_base_code, None, ""}
 print("-"*80)
 print(f"START finding files MainBASE")
 
-file_name_main_base_found_list = glob.glob(mask_file_base)
-print("Найдены файлы главной базы:", file_name_main_base_found_list)
+file_base_found_list = glob.glob(file_base_mask)
+print("Найдены файлы главной базы:", file_base_found_list)
 
 def files_found_several(type_txt):
     print(f"ОШИБКА: найдено несколько файлов {type_txt}! уберите лишние! и перезапустите приложение", file=sys.stderr)
@@ -56,10 +56,10 @@ def files_found_opened(type_txt):
     input("Нажмите Enter для выхода")
     sys.exit()
 
-if len(file_name_main_base_found_list) == 1:
-    file_name_main_base = file_name_main_base_found_list[0]
-elif len(file_name_main_base_found_list) > 1:
-    for file in file_name_main_base_found_list:
+if len(file_base_found_list) == 1:
+    file_base = file_base_found_list[0]
+elif len(file_base_found_list) > 1:
+    for file in file_base_found_list:
         if file.startswith(file_opened_startwith_symbols):
             files_found_opened("главной базы")
     else:
@@ -75,14 +75,14 @@ for vendor in vendor_dict:
     print(f"VENDOR [{vendor}]")
 
     vendor_data_dict = vendor_dict[vendor]
-    mask_vendor_file = vendor_data_dict["file_mask"]
-    file_name_vendor_found_list = glob.glob(mask_vendor_file)
-    print(f"Найдены файлы вендора [{vendor}]: {file_name_vendor_found_list}")
+    file_vendor_mask = vendor_data_dict["file_mask"]
+    file_vendor_found_list = glob.glob(file_vendor_mask)
+    print(f"Найдены файлы вендора [{vendor}]: {file_vendor_found_list}")
 
-    if len(file_name_vendor_found_list) == 1:
-        vendor_data_dict["file_found_if_one"] = file_name_vendor_found_list[0]
-    elif len(file_name_vendor_found_list) > 1:
-        for file in file_name_vendor_found_list:
+    if len(file_vendor_found_list) == 1:
+        vendor_data_dict["file_found_if_one"] = file_vendor_found_list[0]
+    elif len(file_vendor_found_list) > 1:
+        for file in file_vendor_found_list:
             if file.startswith(file_opened_startwith_symbols):
                 files_found_opened(f"вендора [{vendor}]")
         else:
@@ -95,31 +95,31 @@ print(f"START MainBASE WORK")
 
 # --------------------------
 # 1=file INIT
-wb_base = openpyxl.load_workbook(file_name_main_base)
+wb_base = openpyxl.load_workbook(file_base)
 ws_base = wb_base.active
 
 # --------------------------
 # 2=DETECT COLUMNS IN HEADER
 row_title = ws_base[1]
-column_index_base_from_1 = 1
+column_index = 1
 for cell in row_title:
     cell_value = cell.value
-    if cell_value == column_name_base_code:
-        column_index_base_code = column_index_base_from_1
-        print(f"Номер колонки [{column_name_base_code}] = [{column_index_base_code}]")
-    elif cell_value == column_name_base_art:
-        column_index_base_art = column_index_base_from_1
-        print(f"Номер колонки [{column_name_base_art}] = [{column_index_base_art}]")
-    elif cell_value == column_name_base_price1:
-        column_index_base_price1 = column_index_base_from_1
-        print(f"Номер колонки price1[{column_name_base_price1}] = [{column_index_base_price1}]")
-    elif cell_value == column_name_base_price2:
-        column_index_base_price2 = column_index_base_from_1
-        print(f"Номер колонки price2[{column_name_base_price2}] = [{column_index_base_price2}]")
-    elif cell_value == column_name_base_price3:
-        column_index_base_price3 = column_index_base_from_1
-        print(f"Номер колонки price3[{column_name_base_price3}] = [{column_index_base_price3}]")
-    column_index_base_from_1 += 1
+    if cell_value == base_column_name_code:
+        column_index_base_code = column_index
+        print(f"Номер колонки [{base_column_name_code}] = [{column_index_base_code}]")
+    elif cell_value == base_column_name_art:
+        column_index_base_art = column_index
+        print(f"Номер колонки [{base_column_name_art}] = [{column_index_base_art}]")
+    elif cell_value == base_column_name_price1:
+        column_index_base_price1 = column_index
+        print(f"Номер колонки price1[{base_column_name_price1}] = [{column_index_base_price1}]")
+    elif cell_value == base_column_name_price2:
+        column_index_base_price2 = column_index
+        print(f"Номер колонки price2[{base_column_name_price2}] = [{column_index_base_price2}]")
+    elif cell_value == base_column_name_price3:
+        column_index_base_price3 = column_index
+        print(f"Номер колонки price3[{base_column_name_price3}] = [{column_index_base_price3}]")
+    column_index += 1
 
 # --------------------------
 # 3=load DATA - ColumnCODE
@@ -127,7 +127,7 @@ column_values_code_base_all_dict = dict()
 column_values_code_base_repeated_set = set()
 
 print("-"*80)
-print(f"load data from file: [{file_name_main_base}]")
+print(f"load data from file: [{file_base}]")
 print("-"*40)
 column_values_code_base_iter = ws_base.iter_cols(min_col=column_index_base_code, max_col=column_index_base_code)
 for column_tuple in column_values_code_base_iter:
@@ -164,7 +164,7 @@ count_column_values_code_base_all_dict = len(column_values_code_base_all_dict)
 count_column_values_code_base_repeated_set = len(column_values_code_base_repeated_set)
 
 print("-"*40)
-# print("from file:", file_name_main_base)
+# print("from file:", file_base)
 print("count_column_values_code_base_all_dict:", count_column_values_code_base_all_dict)
 print("count_column_values_code_base_repeated_set:", count_column_values_code_base_repeated_set)
 
@@ -260,7 +260,7 @@ for vendor in vendor_dict:
     count_column_values_vendor_article_repeated_set = len(column_values_vendor_article_repeated_set)
 
     print("-"*40)
-    # print("from file:", file_name_main_base)
+    # print("from file:", file_base)
     print("count_column_values_vendor_article_all_dict:", count_column_values_vendor_article_all_dict)
     print("count_column_values_vendor_article_repeated_set:", count_column_values_vendor_article_repeated_set)
 
