@@ -166,7 +166,7 @@ for column_tuple in column_values_code_base_iter:
             column_values_code_base_all_dict["price2"] = price2
             column_values_code_base_all_dict["price3"] = price3
 
-            print(f"[{cell_value}]{price1}/{price2}/{price3}")
+            print(f"[{cell_value}]{price1}/{price2}/{price3}/ \t{column_values_code_base_all_dict['price1']}")
         else:
             print(f'found repeated value: [{cell_value}]')
             column_values_code_base_all_dict[cell_value]["cell_obj_list"].append(cell_obj)
