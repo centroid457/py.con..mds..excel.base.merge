@@ -12,8 +12,16 @@ import glob
 
 # ================================================================
 # 0=SETTINGS
-file_base_mask = "*_ad???@?adis???rg_*.xlsx"
 file_opened_startwith_symbols = "~$"
+
+file_base_mask = "*_ad???@?adis???rg_*.xlsx"
+base_header_detector_cell_value = "Группы"
+base_column_name_code = "Код"
+base_column_name_art = "Артикул"
+base_column_name_price1 = "Цена: Цена продажи"
+base_column_name_price2 = "Цена: РРЦ"
+base_column_name_price3 = "Закупочная цена"
+base_column_values_code_null_set = {base_column_name_code, None, ""}
 
 vendor_dict = {"surgaz": {"file_mask": "*surgaz*.xlsx",
                           "file_found_if_one": None,
@@ -27,16 +35,6 @@ vendor_dict = {"surgaz": {"file_mask": "*surgaz*.xlsx",
                           "data_article_all_dict": dict(),      # большой!
                           "data_article_repeated_set": set()},
                }
-
-base_header_detector_cell_value = "Группы"
-
-base_column_name_code = "Код"
-base_column_name_art = "Артикул"
-base_column_name_price1 = "Цена: Цена продажи"
-base_column_name_price2 = "Цена: РРЦ"
-base_column_name_price3 = "Закупочная цена"
-
-base_column_values_code_null_set = {base_column_name_code, None, ""}
 
 # ================================================================
 # 1=DETECT FILES
