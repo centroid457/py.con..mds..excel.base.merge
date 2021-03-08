@@ -149,7 +149,7 @@ for column_tuple in column_values_code_base_iter:
             1=INFO LINE
             
             99=clear old price!
-            100=OK
+            100=OK=renew price!
             101=NEW PRODUCT!!!
 
             """
