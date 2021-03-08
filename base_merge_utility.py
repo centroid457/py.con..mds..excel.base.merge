@@ -17,16 +17,22 @@ find_header_line_square_int = 20
 file_opened_startwith_symbols = "~$"
 
 file_base_mask = "*_ad???@?adis???rg_*.xlsx"
-base_header_detector_cell_value = "Группы"
-base_column_name_code = "Код"
-base_column_name_art = "Артикул"
-base_column_name_price1 = "Цена: Цена продажи"
-base_column_name_price2 = "Цена: РРЦ"
-base_column_name_price3 = "Закупочная цена"
-base_column_values_code_null_set = {base_column_name_code, None, ""}
+base_header_detect_cell_value = "Группы"
+base_column_detect_code = "Код"
+base_column_detect_article = "Артикул"
+base_column_detect_price3 = "Цена: Цена продажи"
+base_column_detect_price2 = "Цена: РРЦ"
+base_column_detect_price1 = "Закупочная цена"
+base_column_values_code_null_set = {base_column_detect_code, None, ""}
 
 vendor_dict = {"surgaz": {"file_mask": "*surgaz*.xlsx",
                           "file_found_if_one": None,
+
+                          "header_detect_cell_value": "Артикул",
+                          "column_detect_article": "Артикул",
+                          "column_detect_price1": "Цена за рулон кратно рулону (Продажи1)",
+                          "column_detect_price2": "МРЦ",
+                          "column_detect_price3": None,     # need formula!!!!
 
                           "column_article_int": 1,
                           "column_price1_int": 4,
@@ -104,12 +110,12 @@ wb_base = openpyxl.load_workbook(file_base)
 ws_base = wb_base.active
 
 # --------------------------
-# 2=DETECT HEADER LINE
+# 2=DETECT HEADER LINE ROW
 cell_iter_cols = ws_base.iter_cols(max_row=find_header_line_square_int, max_col=find_header_line_square_int)
 for column_tuple in cell_iter_cols:
     for cell_obj in column_tuple:
         cell_value = cell_obj.value
-        if cell_value == base_header_detector_cell_value:
+        if cell_value == base_header_detect_cell_value:
             base_header_row_int = cell_obj.row
 
 # --------------------------
@@ -118,21 +124,21 @@ row_title = ws_base[base_header_row_int]
 column_seek_index = 1
 for cell in row_title:
     cell_value = cell.value
-    if cell_value == base_column_name_code:
+    if cell_value == base_column_detect_code:
         base_column_index_code = column_seek_index
-        print(f"Номер колонки [{base_column_name_code}] = [{base_column_index_code}]")
-    elif cell_value == base_column_name_art:
+        print(f"Номер колонки [{base_column_detect_code}] = [{base_column_index_code}]")
+    elif cell_value == base_column_detect_article:
         base_column_index_art = column_seek_index
-        print(f"Номер колонки [{base_column_name_art}] = [{base_column_index_art}]")
-    elif cell_value == base_column_name_price1:
+        print(f"Номер колонки [{base_column_detect_article}] = [{base_column_index_art}]")
+    elif cell_value == base_column_detect_price1:
         base_column_index_price1 = column_seek_index
-        print(f"Номер колонки price1[{base_column_name_price1}] = [{base_column_index_price1}]")
-    elif cell_value == base_column_name_price2:
+        print(f"Номер колонки price1[{base_column_detect_price1}] = [{base_column_index_price1}]")
+    elif cell_value == base_column_detect_price2:
         base_column_index_price2 = column_seek_index
-        print(f"Номер колонки price2[{base_column_name_price2}] = [{base_column_index_price2}]")
-    elif cell_value == base_column_name_price3:
+        print(f"Номер колонки price2[{base_column_detect_price2}] = [{base_column_index_price2}]")
+    elif cell_value == base_column_detect_price3:
         base_column_index_price3 = column_seek_index
-        print(f"Номер колонки price3[{base_column_name_price3}] = [{base_column_index_price3}]")
+        print(f"Номер колонки price3[{base_column_detect_price3}] = [{base_column_index_price3}]")
     column_seek_index += 1
 
 # --------------------------
