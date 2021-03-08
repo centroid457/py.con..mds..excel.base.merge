@@ -162,11 +162,11 @@ for column_tuple in column_values_code_base_iter:
             price2 = ws_base.cell(row=cell_obj.row, column=base_column_index_price2).value
             price3 = ws_base.cell(row=cell_obj.row, column=base_column_index_price3).value
 
-            column_values_code_base_all_dict["price1"] = price1
-            column_values_code_base_all_dict["price2"] = price2
-            column_values_code_base_all_dict["price3"] = price3
+            column_values_code_base_all_dict[cell_value]["price1"] = price1
+            column_values_code_base_all_dict[cell_value]["price2"] = price2
+            column_values_code_base_all_dict[cell_value]["price3"] = price3
 
-            print(f"[{cell_value}]{price1}/{price2}/{price3}/ \t{column_values_code_base_all_dict['price1']}")
+            print(f"[{cell_value}]{price1}/{price2}/{price3}")
         else:
             print(f'found repeated value: [{cell_value}]')
             column_values_code_base_all_dict[cell_value]["cell_obj_list"].append(cell_obj)
@@ -334,7 +334,7 @@ for vendor in vendor_dict:
             base_article_price2 = column_values_code_base_all_dict[article_value]["price2"]
             base_article_price3 = column_values_code_base_all_dict[article_value]["price3"]
 
-            print(f"{article_mark}={base_article_price1}/{base_article_price2}/{base_article_price3}[{article_value}]{vendor_article_price1}/{vendor_article_price2}/{vendor_article_price3}")
+            print(f"{article_mark}\t{base_article_price1}/{base_article_price2}/{base_article_price3}\t[{article_value}]\t{vendor_article_price1}/{vendor_article_price2}/{vendor_article_price3}")
 
         if result_marker_dict.get(article_mark, None) is None:
             result_marker_dict.update({article_mark: set()})
