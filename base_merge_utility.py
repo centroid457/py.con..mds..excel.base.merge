@@ -28,6 +28,8 @@ vendor_dict = {"surgaz": {"file_mask": "*surgaz*.xlsx",
                           "data_article_repeated_set": set()},
                }
 
+base_header_detector_cell_value = "Группы"
+
 base_column_name_code = "Код"
 base_column_name_art = "Артикул"
 base_column_name_price1 = "Цена: Цена продажи"
@@ -108,20 +110,20 @@ column_index = 1
 for cell in row_title:
     cell_value = cell.value
     if cell_value == base_column_name_code:
-        column_index_base_code = column_index
-        print(f"Номер колонки [{base_column_name_code}] = [{column_index_base_code}]")
+        base_column_index_code = column_index
+        print(f"Номер колонки [{base_column_name_code}] = [{base_column_index_code}]")
     elif cell_value == base_column_name_art:
-        column_index_base_art = column_index
-        print(f"Номер колонки [{base_column_name_art}] = [{column_index_base_art}]")
+        base_column_index_art = column_index
+        print(f"Номер колонки [{base_column_name_art}] = [{base_column_index_art}]")
     elif cell_value == base_column_name_price1:
-        column_index_base_price1 = column_index
-        print(f"Номер колонки price1[{base_column_name_price1}] = [{column_index_base_price1}]")
+        base_column_index_price1 = column_index
+        print(f"Номер колонки price1[{base_column_name_price1}] = [{base_column_index_price1}]")
     elif cell_value == base_column_name_price2:
-        column_index_base_price2 = column_index
-        print(f"Номер колонки price2[{base_column_name_price2}] = [{column_index_base_price2}]")
+        base_column_index_price2 = column_index
+        print(f"Номер колонки price2[{base_column_name_price2}] = [{base_column_index_price2}]")
     elif cell_value == base_column_name_price3:
-        column_index_base_price3 = column_index
-        print(f"Номер колонки price3[{base_column_name_price3}] = [{column_index_base_price3}]")
+        base_column_index_price3 = column_index
+        print(f"Номер колонки price3[{base_column_name_price3}] = [{base_column_index_price3}]")
     column_index += 1
 
 # --------------------------
@@ -132,7 +134,7 @@ column_values_code_base_repeated_set = set()
 print("-"*80)
 print(f"load data from file: [{file_base}]")
 print("-"*40)
-column_values_code_base_iter = ws_base.iter_cols(min_col=column_index_base_code, max_col=column_index_base_code)
+column_values_code_base_iter = ws_base.iter_cols(min_col=base_column_index_code, max_col=base_column_index_code)
 for column_tuple in column_values_code_base_iter:
     for cell_obj in column_tuple:
         cell_value = cell_obj.value
