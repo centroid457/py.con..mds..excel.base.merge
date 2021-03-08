@@ -12,6 +12,8 @@ import glob
 
 # ================================================================
 # 0=SETTINGS
+find_header_line_square_int = 20
+
 file_opened_startwith_symbols = "~$"
 
 file_base_mask = "*_ad???@?adis???rg_*.xlsx"
@@ -103,13 +105,16 @@ ws_base = wb_base.active
 
 # --------------------------
 # 2=DETECT HEADER LINE
-
-
-header_line_int = 1
+cell_iter_cols = ws_base.iter_cols(max_row=find_header_line_square_int, max_col=find_header_line_square_int)
+for column_tuple in cell_iter_cols:
+    for cell_obj in column_tuple:
+        cell_value = cell_obj.value
+        if cell_value == base_header_detector_cell_value:
+            base_header_row_int = cell_obj.row
 
 # --------------------------
 # 3=DETECT COLUMNS IN HEADER
-row_title = ws_base[1]
+row_title = ws_base[base_header_row_int]
 column_seek_index = 1
 for cell in row_title:
     cell_value = cell.value
@@ -131,7 +136,7 @@ for cell in row_title:
     column_seek_index += 1
 
 # --------------------------
-# 3=load DATA - ColumnCODE
+# 4=load DATA - ColumnCODE
 column_values_code_base_all_dict = dict()
 column_values_code_base_repeated_set = set()
 
@@ -168,7 +173,7 @@ for column_tuple in column_values_code_base_iter:
             column_values_code_base_repeated_set.update({cell_value})
 
 # --------------------------
-# 4=print loadRESULTS
+# 5=print loadRESULTS
 count_column_values_code_base_all_dict = len(column_values_code_base_all_dict)
 count_column_values_code_base_repeated_set = len(column_values_code_base_repeated_set)
 
