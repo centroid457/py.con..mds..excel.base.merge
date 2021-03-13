@@ -40,7 +40,17 @@ vendor_dict = {"surgaz": {"file_mask": "*surgaz*.xlsx",
 
                           "data_article_all_dict": dict(),      # большой!
                           "data_article_repeated_set": set()},
-               }
+}
+
+vendor_marker_dict = {
+    -1: {"comment": "INCORRECT DATA=exists different price for one article", "color": "FF0000"},
+    0: {"comment": "NULL ARTICLE", "color": "FFFFFF"},
+    1: {"comment": "clear old price!", "color": "FFFFFF"},
+
+    99: {"comment": "INFO LINE", "color": "FFFFFF"},
+    100: {"comment": "OK=renew price!", "color": "00FF00"},
+    101: {"comment": "NEW PRODUCT!!!", "color": "00FFFF"},
+}
 
 # ================================================================
 # 1=DETECT FILES
@@ -254,17 +264,6 @@ for vendor in vendor_dict:
                                                                            "price2": None,
                                                                            "price3": None,
                                                                            }})
-                """
-                MARKER
-
-                -1=INCORRECT DATA=exists different price for one article
-                0=NULL ARTICLE
-                1=INFO LINE
-
-                99=clear old price!
-                100=OK=renew price!
-                101=NEW PRODUCT!!!
-                """
 
                 cell_value_dict = column_values_vendor_article_all_dict[cell_value]
                 cell_obj_price1_value = ws_vendor.cell(row=cell_obj.row, column=vendor_column_index_price1).value
@@ -313,7 +312,7 @@ for vendor in vendor_dict:
                     cell_value_dict["marker"] = -1   # INCORRECT DATA=exists different price for one article
 
     # --------------------------
-    # 4=print loadedRESULTS
+    # 4=print and PROCESS loadedRESULTS
     count_column_values_vendor_article_all_dict = len(column_values_vendor_article_all_dict)
     count_column_values_vendor_article_repeated_set = len(column_values_vendor_article_repeated_set)
 
@@ -328,8 +327,10 @@ for vendor in vendor_dict:
     result_marker_dict = dict()
     for cell_value in column_values_vendor_article_all_dict:
         data_dict = column_values_vendor_article_all_dict[cell_value]
-        article_value = cell_value
+        cell_obj_list = data_dict["cell_obj_list"]
+
         article_mark = data_dict["marker"]
+        article_value = cell_value
 
         vendor_article_price1 = data_dict["price1"]
         vendor_article_price2 = data_dict["price2"]
@@ -339,6 +340,8 @@ for vendor in vendor_dict:
             base_article_price1 = column_values_code_base_all_dict[article_value]["price1"]
             base_article_price2 = column_values_code_base_all_dict[article_value]["price2"]
             base_article_price3 = column_values_code_base_all_dict[article_value]["price3"]
+
+            cell.fill = openpyxl.styles.PatternFill(start_color='0070c1', end_color='0070c1', fill_type='solid')
 
             print(f"{article_mark}\t{base_article_price1}/{base_article_price2}/{base_article_price3}\t[{article_value}]\t{vendor_article_price1}/{vendor_article_price2}/{vendor_article_price3}")
 
