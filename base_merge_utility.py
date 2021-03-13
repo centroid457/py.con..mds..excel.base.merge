@@ -9,6 +9,7 @@
 import openpyxl
 import sys
 import glob
+import math
 
 # ================================================================
 # 0=SETTINGS
@@ -166,7 +167,7 @@ for column_tuple in column_values_code_base_iter:
             column_values_code_base_all_dict[cell_value]["price2"] = price2
             column_values_code_base_all_dict[cell_value]["price3"] = price3
 
-            print(f"[{cell_value}]{price1}/{price2}/{price3}")
+            # print(f"[{cell_value}]{price1}/{price2}/{price3}")
         else:
             print(f'found repeated value: [{cell_value}]')
             column_values_code_base_all_dict[cell_value]["cell_obj_list"].append(cell_obj)
@@ -264,9 +265,10 @@ for vendor in vendor_dict:
                 100=OK=renew price!
                 101=NEW PRODUCT!!!
                 """
+
                 cell_value_dict = column_values_vendor_article_all_dict[cell_value]
-                cell_obj_price1 = ws_vendor.cell(row=cell_obj.row, column=vendor_column_index_price1).value
-                cell_obj_price2 = ws_vendor.cell(row=cell_obj.row, column=vendor_column_index_price2).value
+                cell_obj_price1_value = ws_vendor.cell(row=cell_obj.row, column=vendor_column_index_price1).value
+                cell_obj_price2_value = ws_vendor.cell(row=cell_obj.row, column=vendor_column_index_price2).value
 
                 # check FOR BLANK
                 if cell_value in vendor_data_dict["article_blank_set"]:
@@ -276,16 +278,20 @@ for vendor in vendor_dict:
                     cell_value_dict["marker"] = 1   # INFO LINE
                     continue
 
-                # check FOR PRICE
-                if cell_obj_price1 is None:
-                    if column_values_code_base_all_dict.get(cell_value, None) is None:
-                        cell_value_dict["marker"] = 1   # INFO LINE
-                    else:
-                        cell_value_dict["marker"] = 99   # CLEAR
-
                 else:
-                    cell_value_dict["price1"] = cell_obj_price1
-                    cell_value_dict["price2"] = cell_obj_price2
+                    if isinstance(cell_obj_price1_value, (int, float)):
+                        cell_obj_price1_float = float(cell_obj_price1_value)
+                    else:
+                        try:
+                            # print("price1/", cell_obj_price1_value)
+                            cell_obj_price1_float = float(cell_obj_price1_value.replace(",", "."))
+                        except:
+                            cell_value_dict["marker"] = 1   # INFO LINE
+                            continue
+
+                    cell_value_dict["price1"] = cell_obj_price1_value
+                    cell_value_dict["price2"] = cell_obj_price2_value
+                    cell_value_dict["price3"] = str(math.ceil(cell_obj_price1_float * 100 * 100/60)/100).replace(".", ",")
 
                     if column_values_code_base_all_dict.get(cell_value, None) is None:
                         cell_value_dict["marker"] = 101      # NEW PRODUCT!!!
