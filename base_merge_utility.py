@@ -313,7 +313,7 @@ for vendor in vendor_dict:
                     cell_value_dict["marker"] = -1   # INCORRECT DATA=exists different price for one article
 
     # --------------------------
-    # 4=print loadRESULTS
+    # 4=print loadedRESULTS
     count_column_values_vendor_article_all_dict = len(column_values_vendor_article_all_dict)
     count_column_values_vendor_article_repeated_set = len(column_values_vendor_article_repeated_set)
 
@@ -346,6 +346,8 @@ for vendor in vendor_dict:
             result_marker_dict.update({article_mark: set()})
         result_marker_dict[article_mark].update({article_value})
 
+    # --------------------------
+    # 5=print MARKERS STATISTICS
     print("*"*80)
     print("MARKERS STATISTICS")
     for marker in result_marker_dict:
