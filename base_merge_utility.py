@@ -48,7 +48,7 @@ vendor_marker_dict = {
     1: {"comment": "INFO LINE", "color": "999999"},
 
     99: {"comment": "clear old price!", "color": "999999"},     # хз нужно удалить
-    100: {"comment": "OK=renew price!", "color": "00FF00"},
+    100: {"comment": "OK=renew price!", "color": "55FF55"},
     101: {"comment": "NEW PRODUCT!!!", "color": "FFFF00"},
 }
 
@@ -329,13 +329,13 @@ for vendor in vendor_dict:
         vendor_data_dict = column_values_vendor_article_all_dict[vendor_cell_value]
         vendor_cell_obj_list = vendor_data_dict["cell_obj_list"]
 
-        article_value = vendor_cell_value
-        article_mark = vendor_data_dict["marker"]
-        article_mark_color = vendor_marker_dict[article_mark]["color"]
-
         vendor_article_price1 = vendor_data_dict["price1"]
         vendor_article_price2 = vendor_data_dict["price2"]
         vendor_article_price3 = vendor_data_dict["price3"]
+
+        article_value = vendor_cell_value
+        article_mark = vendor_data_dict["marker"]
+        article_mark_color = vendor_marker_dict[article_mark]["color"]
 
         # process VendorFile and color mark cellLines
         for cell_obj in vendor_cell_obj_list:
@@ -357,6 +357,10 @@ for vendor in vendor_dict:
             # RENEW prices
             for cell_obj in base_cell_obj_list:
                 line = ws_base[cell_obj.row]
+                ws_base.cell(row=cell_obj.row, column=base_column_index_price1).value = vendor_article_price1
+                ws_base.cell(row=cell_obj.row, column=base_column_index_price2).value = vendor_article_price2
+                ws_base.cell(row=cell_obj.row, column=base_column_index_price3).value = vendor_article_price3
+
                 for cell in line:
                     cell.fill = openpyxl.styles.PatternFill(start_color=article_mark_color, end_color=article_mark_color, fill_type='solid')
 
