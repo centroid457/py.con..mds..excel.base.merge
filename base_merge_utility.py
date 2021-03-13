@@ -44,12 +44,12 @@ vendor_dict = {"surgaz": {"file_mask": "*surgaz*.xlsx",
 
 vendor_marker_dict = {
     -1: {"comment": "INCORRECT DATA=exists different price for one article", "color": "FF0000"},
-    0: {"comment": "NULL ARTICLE", "color": "FFFFFF"},
-    1: {"comment": "clear old price!", "color": "FFFFFF"},
+    0: {"comment": "NULL ARTICLE", "color": "999999"},
+    1: {"comment": "INFO LINE", "color": "999999"},
 
-    99: {"comment": "INFO LINE", "color": "FFFFFF"},
+    99: {"comment": "clear old price!", "color": "999999"},     # хз нужно удалить
     100: {"comment": "OK=renew price!", "color": "00FF00"},
-    101: {"comment": "NEW PRODUCT!!!", "color": "00FFFF"},
+    101: {"comment": "NEW PRODUCT!!!", "color": "FFFF00"},
 }
 
 # ================================================================
@@ -325,25 +325,40 @@ for vendor in vendor_dict:
     print("*"*80)
 
     result_marker_dict = dict()
-    for cell_value in column_values_vendor_article_all_dict:
-        data_dict = column_values_vendor_article_all_dict[cell_value]
-        cell_obj_list = data_dict["cell_obj_list"]
+    for vendor_cell_value in column_values_vendor_article_all_dict:
+        vendor_data_dict = column_values_vendor_article_all_dict[vendor_cell_value]
+        vendor_cell_obj_list = vendor_data_dict["cell_obj_list"]
 
-        article_mark = data_dict["marker"]
-        article_value = cell_value
+        article_value = vendor_cell_value
+        article_mark = vendor_data_dict["marker"]
+        article_mark_color = vendor_marker_dict[article_mark]["color"]
 
-        vendor_article_price1 = data_dict["price1"]
-        vendor_article_price2 = data_dict["price2"]
-        vendor_article_price3 = data_dict["price3"]
+        vendor_article_price1 = vendor_data_dict["price1"]
+        vendor_article_price2 = vendor_data_dict["price2"]
+        vendor_article_price3 = vendor_data_dict["price3"]
 
+        # process VendorFile and color mark cellLines
+        for cell_obj in vendor_cell_obj_list:
+            line = ws_vendor[cell_obj.row]
+            for cell in line:
+                cell.fill = openpyxl.styles.PatternFill(start_color=article_mark_color, end_color=article_mark_color, fill_type='solid')
+
+        # process BaseFile and color mark cellLines!
         if article_mark == 100:
+            base_cell_obj_list = column_values_code_base_all_dict[article_value]["cell_obj_list"]
+
+            # old prices
             base_article_price1 = column_values_code_base_all_dict[article_value]["price1"]
             base_article_price2 = column_values_code_base_all_dict[article_value]["price2"]
             base_article_price3 = column_values_code_base_all_dict[article_value]["price3"]
 
-            cell.fill = openpyxl.styles.PatternFill(start_color='0070c1', end_color='0070c1', fill_type='solid')
-
             print(f"{article_mark}\t{base_article_price1}/{base_article_price2}/{base_article_price3}\t[{article_value}]\t{vendor_article_price1}/{vendor_article_price2}/{vendor_article_price3}")
+
+            # RENEW prices
+            for cell_obj in base_cell_obj_list:
+                line = ws_base[cell_obj.row]
+                for cell in line:
+                    cell.fill = openpyxl.styles.PatternFill(start_color=article_mark_color, end_color=article_mark_color, fill_type='solid')
 
         if result_marker_dict.get(article_mark, None) is None:
             result_marker_dict.update({article_mark: set()})
@@ -356,3 +371,6 @@ for vendor in vendor_dict:
     for marker in result_marker_dict:
         print(f"marker[{marker}]=[{len(result_marker_dict[marker])}]count", )
     print("*"*80)
+
+wb_vendor.save("!_vendor_saved.xlsx")
+wb_base.save("!_base_saved.xlsx")
