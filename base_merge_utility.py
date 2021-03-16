@@ -315,6 +315,7 @@ for vendor in vendor_dict:
     # 4=print and PROCESS loadedRESULTS
     count_column_values_vendor_article_all_dict = len(column_values_vendor_article_all_dict)
     count_column_values_vendor_article_repeated_set = len(column_values_vendor_article_repeated_set)
+    count_vendor_file_lines = ws_vendor.max_row
 
     print("-"*40)
     # print("from file:", file_base)
@@ -328,6 +329,8 @@ for vendor in vendor_dict:
     for vendor_cell_value in column_values_vendor_article_all_dict:
         vendor_data_dict = column_values_vendor_article_all_dict[vendor_cell_value]
         vendor_cell_obj_list = vendor_data_dict["cell_obj_list"]
+        line_current_int = vendor_cell_obj_list[0].row
+        print(f"[{line_current_int}]from[{count_vendor_file_lines}]")
 
         vendor_article_price1 = vendor_data_dict["price1"]
         vendor_article_price2 = vendor_data_dict["price2"]
@@ -352,7 +355,7 @@ for vendor in vendor_dict:
             base_article_price2 = column_values_code_base_all_dict[article_value]["price2"]
             base_article_price3 = column_values_code_base_all_dict[article_value]["price3"]
 
-            print(f"{article_mark}\t{base_article_price1}/{base_article_price2}/{base_article_price3}\t[{article_value}]\t{vendor_article_price1}/{vendor_article_price2}/{vendor_article_price3}")
+            # print(f"{article_mark}\t{base_article_price1}/{base_article_price2}/{base_article_price3}\t[{article_value}]\t{vendor_article_price1}/{vendor_article_price2}/{vendor_article_price3}")
 
             # RENEW prices
             for cell_obj in base_cell_obj_list:
